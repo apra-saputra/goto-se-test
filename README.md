@@ -14,4 +14,4 @@ a project that to complete technical test
 - SweetAlert2
 
 ## **LINK**
-[My-ANIME](goto-se-test.vercel.app)
+[My-ANIME](https://goto-se-test.vercel.app)
