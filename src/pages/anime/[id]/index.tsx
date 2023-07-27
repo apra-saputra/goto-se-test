@@ -90,8 +90,6 @@ const AnimeDetail = () => {
     try {
       dispatch(addCollection(nameCollection));
       dispatch(initCollection());
-
-      setShowCollections(false);
       toast(`Menambahkan anime Ke ${nameCollection}`, "success");
     } catch (error) {
       toast(error as string, "error");
