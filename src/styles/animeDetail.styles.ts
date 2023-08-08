@@ -41,8 +41,7 @@ export const styles = {
     "@media (min-width: 768px)": {
       justifyContent: "flex-start",
       flexDirection: "row",
-      backgroundColor: "transparent",
-      boxShadow: "none",
+      boxShadow: "0 0 1rem var(--shadow)",
     },
   }),
   banner: css({
@@ -58,7 +57,7 @@ export const styles = {
   }),
   image: css({
     minWidth: 300,
-    aspectRatio: 2 / 3,
+    height: "100%",
     objectFit: "cover",
     "@media (min-width: 768px)": {
       objectFit: "contain",
@@ -67,8 +66,9 @@ export const styles = {
   info: css({
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
-    padding: "1rem",
+    justifyContent: "start",
+    padding: ".5rem 1rem",
+    gap: '.25rem',
     "& p": {
       fontWeight: "600",
     },
@@ -76,7 +76,7 @@ export const styles = {
       fontWeight: "200",
     },
     "@media (min-width: 768px)": {
-      padding: 0,
+      padding: ".5rem .25rem",
     },
   }),
   action: css({
