@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Navbar from "./navbar/Navbar";
 import Head from "next/head";
 import { useRouter } from "next/router";
