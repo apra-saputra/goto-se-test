@@ -17,6 +17,9 @@ import SelectOption from "@/components/input/SelectOption";
 import { SORT_LIST_OPTION } from "@/utils/sortOption";
 
 const Anime = () => {
+  const [animes, setAnimes] = useState<MediaType[]>([]);
+  const [useLoadMore, setUseLoadMore] = useState<boolean>(false);
+  const [usePagination, setUsePagination] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [genre, setGenre] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("POPULARITY_DESC");
@@ -31,36 +34,30 @@ const Anime = () => {
   const deboucedSearch = useDebounce(search, 1000);
   const deboucedGenre = useDebounce(genre, 1000);
 
-  const { loading, error, data, fetchMore } = useQuery<PayloadType>(
-    GET_ANIME_LIST,
-    {
-      variables: {
-        page: pageVariable?.currentPage,
-        perPage: pageVariable?.perPage,
-        sort: sortBy,
-        genre: deboucedGenre ? deboucedGenre : undefined,
-        search: deboucedSearch ? deboucedSearch : undefined,
-      },
-    }
-  );
+  const { loading, error, data } = useQuery<PayloadType>(GET_ANIME_LIST, {
+    variables: {
+      page: pageVariable?.currentPage,
+      perPage: pageVariable?.perPage,
+      sort: sortBy,
+      genre: deboucedGenre ? deboucedGenre : undefined,
+      search: deboucedSearch ? deboucedSearch : undefined,
+    },
+  });
 
   const { toast } = useSweetAlert();
 
   const handlePagination = (selectedItem: { selected: number }) => {
+    setUsePagination(true);
     const obj = { ...(pageVariable as PageInfo) };
     obj.currentPage = selectedItem.selected + 1;
     setPageVariable(obj);
   };
 
   const loadMore = () => {
+    setUseLoadMore(true);
     const obj = { ...(pageVariable as PageInfo) };
-    obj.perPage += 10;
+    obj.currentPage += 1;
     setPageVariable(obj);
-    fetchMore({
-      variables: {
-        perPage: obj.perPage,
-      },
-    });
 
     const scrollY = window.scrollY;
 
@@ -74,9 +71,25 @@ const Anime = () => {
       setPageVariable(data?.Page.pageInfo);
     }
 
+    if (data?.Page.media.length) {
+      if (useLoadMore) {
+        setAnimes((state) => [...state, ...data.Page.media]);
+        setUseLoadMore(false);
+      } else {
+        setAnimes(data.Page.media);
+        setUsePagination(false);
+      }
+    }
+
     if (error) toast(error.message, "error");
     return () => {};
   }, [loading, error, data?.Page.pageInfo.currentPage]);
+
+  useEffect(() => {
+    setUsePagination(true);
+
+    return () => {};
+  }, []);
 
   return (
     <section css={styles.container}>
@@ -129,18 +142,15 @@ const Anime = () => {
             borderBottom: "0.25rem solid var(--accent-secondary)",
             width: "100%",
           }}
-        ></div>
+        />
         <ul css={styles.container}>
-          {loading
+          {usePagination
             ? dummyData.map((_, index) => <Skeleton key={index} />)
-            : data &&
-              data.Page.media.map((item) => {
-                return (
-                  <li key={item.id}>
-                    <AnimeCard item={item} />
-                  </li>
-                );
-              })}
+            : animes.map((anime) => (
+                <li key={anime.id}>
+                  <AnimeCard item={anime} />
+                </li>
+              ))}
         </ul>
         {pageVariable && (
           <ReactPaginate

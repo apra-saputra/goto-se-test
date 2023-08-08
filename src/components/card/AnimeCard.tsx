@@ -13,7 +13,7 @@ const AnimeCard: React.FC<CardProps> = ({ item, confirmDelete }) => {
   let hoverTimeout: ReturnType<typeof setTimeout>;
   const router = useRouter();
 
-  const descriptions = item.description.split("<br><br>");
+  const descriptions = item.description ? item.description.split("<br><br>") : [""];
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);

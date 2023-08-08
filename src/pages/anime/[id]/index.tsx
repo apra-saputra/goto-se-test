@@ -40,7 +40,9 @@ const AnimeDetail = () => {
     },
   });
 
-  const description = data?.Media.description.split("<br><br>");
+  const descriptions = data?.Media.description
+    ? data.Media.description.split("<br><br>")
+    : [""];
 
   const [showCollections, setShowCollections] = useState<boolean>(false);
   const [idCollections, setIdCollections] = useState<number[]>(
@@ -146,12 +148,12 @@ const AnimeDetail = () => {
               animate={{ opacity: 1, y: 0 }}
             >
               <p>description : </p>
-              {description &&
-                description?.map((item, index) => (
+              {descriptions &&
+                descriptions?.map((item, index) => (
                   <div key={index}>
                     <span>{item}</span>
                     <br />
-                    {index + 1 !== description.length && <br />}
+                    {index + 1 !== descriptions.length && <br />}
                   </div>
                 ))}
 
